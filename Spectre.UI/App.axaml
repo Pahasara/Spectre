@@ -1,0 +1,23 @@
+<Application xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Spectre.UI.App"
+             RequestedThemeVariant="Dark">
+
+    <Application.Styles>
+        <FluentTheme />
+    </Application.Styles>
+
+    <Application.Resources>
+        <SolidColorBrush x:Key="BgBrush" Color="#080B14" />
+        <SolidColorBrush x:Key="SurfaceBrush" Color="#111827" />
+        <SolidColorBrush x:Key="SurfaceHoverBrush" Color="#182338" />
+        <SolidColorBrush x:Key="AccentBrush" Color="#2E9FFF" />
+        <SolidColorBrush x:Key="AccentDimBrush" Color="#1B6FCC" />
+        <SolidColorBrush x:Key="AccentGlowBrush" Color="#0B3D91" />
+        <SolidColorBrush x:Key="TextPrimaryBrush" Color="#E8ECF4" />
+        <SolidColorBrush x:Key="TextMutedBrush" Color="#6E7A94" />
+        <SolidColorBrush x:Key="BorderBrush" Color="#1E293F" />
+
+        <Color x:Key="SystemAccentColor">#2E9FFF</Color>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Spectre.UI"
+             x:Class="Spectre.UI.SettingsView"
+             x:DataType="vm:SettingsViewModel"
+             Background="{DynamicResource BgBrush}">
+
+    <StackPanel Margin="20" Spacing="14">
+        <TextBlock Text="Settings" FontSize="20" FontWeight="Bold"
+                   Foreground="{DynamicResource AccentBrush}" />
+
+        <StackPanel Spacing="4">
+            <TextBlock Text="Process poll interval (seconds)"
+                       Foreground="{DynamicResource TextMutedBrush}" FontSize="12" />
+            <TextBox Text="{Binding PollIntervalSeconds}" Width="120" />
+        </StackPanel>
+
+        <StackPanel Spacing="4">
+            <TextBlock Text="UI refresh interval (seconds)"
+                       Foreground="{DynamicResource TextMutedBrush}" FontSize="12" />
+            <TextBox Text="{Binding UiRefreshIntervalSeconds}" Width="120" />
+        </StackPanel>
+
+        <TextBlock Text="{Binding ErrorMessage}"
+                   Foreground="#E5484D" FontSize="12"
+                   IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+        <StackPanel Orientation="Horizontal" Spacing="8">
+            <Button Content="Save" Command="{Binding SaveCommand}"
+                    Background="{DynamicResource AccentBrush}" Foreground="White" />
+            <Button Content="Cancel" Command="{Binding CancelCommand}" />
+        </StackPanel>
+    </StackPanel>
+</UserControl>

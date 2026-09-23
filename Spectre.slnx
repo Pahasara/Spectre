@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Spectre.Core/Spectre.Core.csproj" />
+  <Project Path="Spectre.UI/Spectre.UI.csproj" />
+</Solution>
