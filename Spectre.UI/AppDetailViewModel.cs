@@ -37,11 +37,11 @@ public partial class AppDetailViewModel(TrackerRepository repo, ProcessTrackerSe
 
         Sessions.Clear();
         var sessions = await repo.GetSessionsForAppAsync(app.Id);
-        foreach (var s in sessions.Where(s => s.EndTime is not null))
+        foreach (var s in sessions)
         {
             Sessions.Add(new SessionRow(
                 s.StartTime.ToLocalTime().ToString("MMM d, HH:mm"),
-                TimeSpan.FromSeconds(s.DurationSeconds).ToString(@"hh\:mm\:ss")));
+                DurationFormatter.Format(s)));
         }
     }
 
@@ -80,3 +80,29 @@ public partial class AppDetailViewModel(TrackerRepository repo, ProcessTrackerSe
 }
 
 public record SessionRow(string StartedAt, string Duration);
+
+internal static class DurationFormatter
+{
+    public static long GetTotalSeconds(AppSession session, DateTime nowUtc)
+    {
+        if (session.EndTime is null)
+        {
+            return Math.Max(0, (long)(nowUtc - session.StartTime).TotalSeconds);
+        }
+
+        return session.DurationSeconds;
+    }
+
+    public static string Format(AppSession session)
+    {
+        return Format(GetTotalSeconds(session, DateTime.UtcNow));
+    }
+
+    public static string Format(long totalSeconds)
+    {
+        var duration = TimeSpan.FromSeconds(totalSeconds);
+        return duration.TotalDays >= 1
+            ? $"{(long)duration.TotalDays}d {duration:hh\\:mm\\:ss}"
+            : duration.ToString(@"hh\:mm\:ss");
+    }
+}

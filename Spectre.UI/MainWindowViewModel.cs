@@ -61,7 +61,8 @@ public partial class MainWindowViewModel : ObservableObject
             foreach (var app in apps)
             {
                 var sessions = await _repo.GetSessionsForAppAsync(app.Id);
-                var totalSeconds = sessions.Sum(s => s.DurationSeconds);
+                var nowUtc = DateTime.UtcNow;
+                var totalSeconds = sessions.Sum(s => DurationFormatter.GetTotalSeconds(s, nowUtc));
                 rows.Add(new TrackedAppRow(app.Id, app.DisplayName, app.ProcessName, totalSeconds));
             }
 
@@ -142,5 +143,5 @@ public partial class MainWindowViewModel : ObservableObject
 
 public record TrackedAppRow(int Id, string DisplayName, string ProcessName, long TotalSeconds)
 {
-    public string TotalTimeFormatted => TimeSpan.FromSeconds(TotalSeconds).ToString(@"hh\:mm\:ss");
+    public string TotalTimeFormatted => DurationFormatter.Format(TotalSeconds);
 }

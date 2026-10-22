@@ -5,12 +5,13 @@
              x:DataType="vm:AppDetailViewModel"
              Background="{DynamicResource BgBrush}">
 
-    <StackPanel Margin="20" Spacing="12">
-        <TextBlock Text="{Binding DisplayName}"
+    <Grid Margin="20" RowDefinitions="Auto,Auto,*">
+        <TextBlock Grid.Row="0" Text="{Binding DisplayName}"
                    FontSize="22" FontWeight="Bold"
-                   Foreground="{DynamicResource AccentBrush}" />
+                   Foreground="{DynamicResource AccentBrush}"
+                   Margin="0 0 0 12" />
 
-        <StackPanel Spacing="6">
+        <StackPanel Grid.Row="1" Spacing="6" Margin="0 0 0 12">
             <TextBox Text="{Binding EditableDisplayName}" PlaceholderText="display name" />
             <TextBox Text="{Binding EditableProcessName}" PlaceholderText="process name, e.g. code, firefox" />
 
@@ -27,21 +28,23 @@
             </StackPanel>
         </StackPanel>
 
-        <ItemsControl ItemsSource="{Binding Sessions}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate x:DataType="vm:SessionRow">
-                    <Border Background="{DynamicResource SurfaceBrush}"
-                            CornerRadius="6" Padding="10" Margin="0 0 0 6">
-                        <Grid ColumnDefinitions="*,Auto">
-                            <TextBlock Grid.Column="0" Text="{Binding StartedAt}"
-                                       Foreground="{DynamicResource TextMutedBrush}" />
-                            <TextBlock Grid.Column="1" Text="{Binding Duration}"
-                                       Foreground="{DynamicResource TextPrimaryBrush}"
-                                       FontFamily="Consolas,Menlo,monospace" />
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </StackPanel>
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto">
+            <ItemsControl ItemsSource="{Binding Sessions}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:SessionRow">
+                        <Border Background="{DynamicResource SurfaceBrush}"
+                                CornerRadius="6" Padding="10" Margin="0 0 0 6">
+                            <Grid ColumnDefinitions="*,Auto">
+                                <TextBlock Grid.Column="0" Text="{Binding StartedAt}"
+                                           Foreground="{DynamicResource TextMutedBrush}" />
+                                <TextBlock Grid.Column="1" Text="{Binding Duration}"
+                                           Foreground="{DynamicResource TextPrimaryBrush}"
+                                           FontFamily="Consolas,Menlo,monospace" />
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </Grid>
 </UserControl>
