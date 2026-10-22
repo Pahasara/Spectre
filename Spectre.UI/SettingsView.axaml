@@ -4,31 +4,71 @@
              x:Class="Spectre.UI.SettingsView"
              x:DataType="vm:SettingsViewModel"
              Background="{DynamicResource BgBrush}">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="28" Spacing="20">
+            <StackPanel Spacing="5">
+                <TextBlock Text="Preferences" FontSize="26" FontWeight="Bold"
+                           Foreground="{DynamicResource TextPrimaryBrush}" />
+                <TextBlock Text="Tune how Spectre observes your activity."
+                           FontSize="12" Foreground="{DynamicResource TextMutedBrush}" />
+            </StackPanel>
 
-    <StackPanel Margin="20" Spacing="14">
-        <TextBlock Text="Settings" FontSize="20" FontWeight="Bold"
-                   Foreground="{DynamicResource AccentBrush}" />
+            <Border Background="{DynamicResource SurfaceBrush}"
+                    BorderBrush="{DynamicResource BorderBrush}" BorderThickness="1"
+                    CornerRadius="14" Padding="18">
+                <StackPanel Spacing="16">
+                    <TextBlock Text="MONITORING" FontSize="10" FontWeight="Bold"
+                               Foreground="{DynamicResource AccentBrush}" />
+                    <Grid ColumnDefinitions="*,Auto">
+                        <StackPanel Spacing="3">
+                            <TextBlock Text="Monitoring enabled" FontSize="13"
+                                       Foreground="{DynamicResource TextPrimaryBrush}" />
+                            <TextBlock Text="Track selected processes in the background."
+                                       FontSize="11" Foreground="{DynamicResource TextMutedBrush}" />
+                        </StackPanel>
+                        <ToggleSwitch Grid.Column="1" IsChecked="{Binding MonitoringEnabled}"
+                                      OnContent="ON" OffContent="OFF"
+                                      VerticalAlignment="Center" />
+                    </Grid>
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Process poll interval" FontSize="13"
+                                   Foreground="{DynamicResource TextPrimaryBrush}" />
+                        <TextBlock Text="How often running processes are checked."
+                                   FontSize="11" Foreground="{DynamicResource TextMutedBrush}" />
+                        <TextBox Text="{Binding PollIntervalSeconds}" Width="150"
+                                 HorizontalAlignment="Left" PlaceholderText="Seconds" />
+                    </StackPanel>
+                    <StackPanel Spacing="6">
+                        <TextBlock Text="Dashboard refresh interval" FontSize="13"
+                                   Foreground="{DynamicResource TextPrimaryBrush}" />
+                        <TextBlock Text="How often totals and running states update."
+                                   FontSize="11" Foreground="{DynamicResource TextMutedBrush}" />
+                        <TextBox Text="{Binding UiRefreshIntervalSeconds}" Width="150"
+                                 HorizontalAlignment="Left" PlaceholderText="Seconds" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
 
-        <StackPanel Spacing="4">
-            <TextBlock Text="Process poll interval (seconds)"
-                       Foreground="{DynamicResource TextMutedBrush}" FontSize="12" />
-            <TextBox Text="{Binding PollIntervalSeconds}" Width="120" />
+            <Border Background="#10233A" BorderBrush="#235080" BorderThickness="1"
+                    CornerRadius="14" Padding="18">
+                <StackPanel Spacing="6">
+                    <TextBlock Text="PRIVACY FIRST" FontSize="10" FontWeight="Bold"
+                               Foreground="{DynamicResource AccentBrush}" />
+                    <TextBlock Text="Spectre stores tracking data locally on this device."
+                               FontSize="13" Foreground="{DynamicResource TextPrimaryBrush}" />
+                    <TextBlock Text="No account, cloud sync, or background upload is required."
+                               FontSize="11" Foreground="{DynamicResource TextMutedBrush}" />
+                </StackPanel>
+            </Border>
+
+            <TextBlock Text="{Binding ErrorMessage}" Foreground="#FF7180" FontSize="12"
+                       IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Spacing="10">
+                <Button Content="Cancel" Command="{Binding CancelCommand}" />
+                <Button Classes="accent-button" Content="Save changes" Command="{Binding SaveCommand}"
+                        Foreground="#06101D"
+                        Padding="18 10" />
+            </StackPanel>
         </StackPanel>
-
-        <StackPanel Spacing="4">
-            <TextBlock Text="UI refresh interval (seconds)"
-                       Foreground="{DynamicResource TextMutedBrush}" FontSize="12" />
-            <TextBox Text="{Binding UiRefreshIntervalSeconds}" Width="120" />
-        </StackPanel>
-
-        <TextBlock Text="{Binding ErrorMessage}"
-                   Foreground="#E5484D" FontSize="12"
-                   IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
-
-        <StackPanel Orientation="Horizontal" Spacing="8">
-            <Button Content="Save" Command="{Binding SaveCommand}"
-                    Background="{DynamicResource AccentBrush}" Foreground="White" />
-            <Button Content="Cancel" Command="{Binding CancelCommand}" />
-        </StackPanel>
-    </StackPanel>
+    </ScrollViewer>
 </UserControl>

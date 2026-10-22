@@ -5,18 +5,139 @@
 
     <Application.Styles>
         <FluentTheme />
+        <Style Selector="Window">
+            <Setter Property="FontFamily" Value="Inter" />
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="#101827" />
+            <Setter Property="BorderBrush" Value="#26344D" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="9" />
+            <Setter Property="Padding" Value="13 10" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            <Setter Property="CaretBrush" Value="{DynamicResource AccentBrush}" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.16" />
+                    <BrushTransition Property="Background" Duration="0:0:0.16" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="TextBox:focus">
+            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
+            <Setter Property="Background" Value="#132137" />
+        </Style>
+        <Style Selector="TextBox:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="#121F31" />
+            <Setter Property="BorderBrush" Value="#3B5876" />
+        </Style>
+        <Style Selector="TextBox:focus /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="#132137" />
+            <Setter Property="BorderBrush" Value="#3979A8" />
+        </Style>
+        <Style Selector="TextBox:pointerover:focus /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="#132137" />
+            <Setter Property="BorderBrush" Value="#3979A8" />
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="Background" Value="#151F31" />
+            <Setter Property="BorderBrush" Value="#26344D" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="8" />
+            <Setter Property="Padding" Value="14 9" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                          Padding="{TemplateBinding Padding}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.14" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.14" />
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.14" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button:pointerover">
+            <Setter Property="Background" Value="#2C3340" />
+            <Setter Property="BorderBrush" Value="#3D4656" />
+        </Style>
+        <Style Selector="Button:pressed">
+            <Setter Property="Background" Value="#102C49" />
+            <Setter Property="BorderBrush" Value="#195A86" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Button.accent-button">
+            <Setter Property="Background" Value="#29ACFF" />
+            <Setter Property="BorderBrush" Value="#29ACFF" />
+            <Setter Property="Foreground" Value="#06101D" />
+        </Style>
+        <Style Selector="Button.accent-button:pointerover">
+            <Setter Property="Background" Value="#70C9FF" />
+            <Setter Property="BorderBrush" Value="#93D8FF" />
+            <Setter Property="Foreground" Value="#06101D" />
+        </Style>
+        <Style Selector="Button.accent-button:pressed">
+            <Setter Property="Background" Value="#1C9BE8" />
+            <Setter Property="BorderBrush" Value="#147AB8" />
+            <Setter Property="Foreground" Value="#EAF7FF" />
+        </Style>
+        <Style Selector="Button.danger-button">
+            <Setter Property="Background" Value="#7D2940" />
+            <Setter Property="BorderBrush" Value="#7D2940" />
+            <Setter Property="Foreground" Value="#FFE8ED" />
+        </Style>
+        <Style Selector="Button.danger-button:pointerover">
+            <Setter Property="Background" Value="#A83A58" />
+            <Setter Property="BorderBrush" Value="#D2607D" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style Selector="Button.danger-button:pressed">
+            <Setter Property="Background" Value="#5F1B2F" />
+            <Setter Property="BorderBrush" Value="#7A2941" />
+            <Setter Property="Foreground" Value="#FFE8ED" />
+        </Style>
+        <Style Selector="Button.refresh-button">
+            <Setter Property="Background" Value="#151F31" />
+            <Setter Property="BorderBrush" Value="#26344D" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        </Style>
+        <Style Selector="Button.refresh-button:pointerover">
+            <Setter Property="Background" Value="#263B55" />
+            <Setter Property="BorderBrush" Value="#3E6287" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        </Style>
+        <Style Selector="Button.refresh-button:pressed">
+            <Setter Property="Background" Value="#102C49" />
+            <Setter Property="BorderBrush" Value="#195A86" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        </Style>
+        <Style Selector="ScrollBar">
+            <Setter Property="Opacity" Value="0.72" />
+        </Style>
     </Application.Styles>
 
     <Application.Resources>
-        <SolidColorBrush x:Key="BgBrush" Color="#080B14" />
-        <SolidColorBrush x:Key="SurfaceBrush" Color="#111827" />
-        <SolidColorBrush x:Key="SurfaceHoverBrush" Color="#182338" />
-        <SolidColorBrush x:Key="AccentBrush" Color="#2E9FFF" />
+        <SolidColorBrush x:Key="BgBrush" Color="#070A12" />
+        <SolidColorBrush x:Key="SurfaceBrush" Color="#0F1726" />
+        <SolidColorBrush x:Key="SurfaceHoverBrush" Color="#17253B" />
+        <SolidColorBrush x:Key="AccentBrush" Color="#46A7FF" />
         <SolidColorBrush x:Key="AccentDimBrush" Color="#1B6FCC" />
         <SolidColorBrush x:Key="AccentGlowBrush" Color="#0B3D91" />
         <SolidColorBrush x:Key="TextPrimaryBrush" Color="#E8ECF4" />
-        <SolidColorBrush x:Key="TextMutedBrush" Color="#6E7A94" />
-        <SolidColorBrush x:Key="BorderBrush" Color="#1E293F" />
+        <SolidColorBrush x:Key="TextMutedBrush" Color="#8290A8" />
+        <SolidColorBrush x:Key="BorderBrush" Color="#1D2A40" />
 
         <Color x:Key="SystemAccentColor">#2E9FFF</Color>
     </Application.Resources>

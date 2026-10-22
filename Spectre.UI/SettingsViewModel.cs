@@ -8,6 +8,9 @@ namespace Spectre.UI;
 public partial class SettingsViewModel(ConfigService config) : ObservableObject
 {
     [ObservableProperty]
+    private bool _monitoringEnabled = config.Current.MonitoringEnabled;
+
+    [ObservableProperty]
     private string _pollIntervalSeconds = config.Current.PollIntervalSeconds.ToString();
 
     [ObservableProperty]
@@ -37,6 +40,7 @@ public partial class SettingsViewModel(ConfigService config) : ObservableObject
 
         config.Save(new AppConfig
         {
+            MonitoringEnabled = MonitoringEnabled,
             PollIntervalSeconds = poll,
             UiRefreshIntervalSeconds = ui
         });

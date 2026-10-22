@@ -2,6 +2,7 @@ namespace Spectre.Core;
 
 public record AppConfig
 {
-    public int PollIntervalSeconds { get; init; } = 7;
-    public int UiRefreshIntervalSeconds { get; init; } = 5;
+    public bool MonitoringEnabled { get; init; } = true;
+    public int PollIntervalSeconds { get; init; } = 5;
+    public int UiRefreshIntervalSeconds { get; init; } = 3;
 }

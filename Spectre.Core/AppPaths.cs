@@ -16,4 +16,5 @@ public static class AppPaths
 
     public static string DbPath => Path.Combine(DataDirectory, "data.sqlite3");
     public static string ConfigPath => Path.Combine(DataDirectory, "config.json");
+    public static string SingleInstanceLockPath => Path.Combine(DataDirectory, "app.lock");
 }

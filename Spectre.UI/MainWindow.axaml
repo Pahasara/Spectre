@@ -4,75 +4,309 @@
         x:Class="Spectre.UI.MainWindow"
         x:Name="RootWindow"
         x:DataType="vm:MainWindowViewModel"
-        Title="DvNET Spectre"
-        Width="720" Height="480"
+        Title="Spectre"
+        Width="1120" Height="720"
+        MinWidth="860" MinHeight="580"
         Icon="/Assets/Icons/icon.ico"
         Background="{DynamicResource BgBrush}">
 
     <Window.Styles>
-        <Style Selector="Button.card">
+        <Style Selector="Border.panel">
             <Setter Property="Background" Value="{DynamicResource SurfaceBrush}" />
             <Setter Property="BorderBrush" Value="{DynamicResource BorderBrush}" />
             <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="CornerRadius" Value="10" />
-            <Setter Property="Padding" Value="16" />
-            <Setter Property="Margin" Value="0 0 12 12" />
-            <Setter Property="Width" Value="200" />
+            <Setter Property="CornerRadius" Value="14" />
+        </Style>
+        <Style Selector="Border.workspace-status">
+            <Setter Property="Background" Value="#101A2B" />
+            <Setter Property="BorderBrush" Value="#223450" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="14" />
+        </Style>
+        <Style Selector="Button.accent-button">
+            <Setter Property="Background" Value="#29ACFF" />
+            <Setter Property="BorderBrush" Value="#29ACFF" />
+            <Setter Property="Foreground" Value="#06101D" />
+        </Style>
+        <Style Selector="Button.accent-button:pointerover">
+            <Setter Property="Background" Value="#70C9FF" />
+            <Setter Property="BorderBrush" Value="#93D8FF" />
+            <Setter Property="Foreground" Value="#06101D" />
+        </Style>
+        <Style Selector="Button.accent-button:pressed">
+            <Setter Property="Background" Value="#1C9BE8" />
+            <Setter Property="BorderBrush" Value="#147AB8" />
+            <Setter Property="Foreground" Value="#EAF7FF" />
+        </Style>
+        <Style Selector="Button.refresh-button">
+            <Setter Property="Background" Value="#151F31" />
+            <Setter Property="BorderBrush" Value="#26344D" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        </Style>
+        <Style Selector="Button.refresh-button:pointerover">
+            <Setter Property="Background" Value="#263B55" />
+            <Setter Property="BorderBrush" Value="#3E6287" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        </Style>
+        <Style Selector="Button.refresh-button:pressed">
+            <Setter Property="Background" Value="#102C49" />
+            <Setter Property="BorderBrush" Value="#195A86" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        </Style>
+        <Style Selector="Button.app-card">
+            <Setter Property="Background" Value="#101A2B" />
+            <Setter Property="BorderBrush" Value="#223450" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="14" />
+            <Setter Property="Padding" Value="18" />
+            <Setter Property="Margin" Value="0 0 14 14" />
             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="MinWidth" Value="250" />
+            <Setter Property="MinHeight" Value="150" />
             <Setter Property="Transitions">
                 <Transitions>
-                    <BrushTransition Property="BorderBrush" Duration="0:0:0.15" />
-                    <BrushTransition Property="Background" Duration="0:0:0.15" />
+                    <BrushTransition Property="Background" Duration="0:0:0.18" />
+                    <BrushTransition Property="BorderBrush" Duration="0:0:0.18" />
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.18" />
                 </Transitions>
             </Setter>
         </Style>
-        <Style Selector="Button.card:pointerover">
-            <Setter Property="BorderBrush" Value="{DynamicResource AccentBrush}" />
-            <Setter Property="Background" Value="{DynamicResource SurfaceHoverBrush}" />
+        <Style Selector="Button.app-card:pointerover">
+            <Setter Property="Background" Value="#1A3D5D" />
+            <Setter Property="BorderBrush" Value="#2A5A80" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Button.app-card:focus">
+            <Setter Property="Background" Value="#101A2B" />
+            <Setter Property="BorderBrush" Value="#2D4668" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Button.app-card:pointerover:focus">
+            <Setter Property="Background" Value="#1A3D5D" />
+            <Setter Property="BorderBrush" Value="#2A5A80" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Button.app-card:pressed">
+            <Setter Property="Background" Value="#102C49" />
+            <Setter Property="BorderBrush" Value="#195A86" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Button.app-card:pointerover:pressed">
+            <Setter Property="Background" Value="#102C49" />
+            <Setter Property="BorderBrush" Value="#195A86" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Button.sidebar-action">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Padding" Value="12" />
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.16" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="Button.sidebar-action:pointerover">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Button.sidebar-action:pressed">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Foreground" Value="#78C5FF" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="Button.sidebar-action:pointerover TextBlock,
+                       Button.sidebar-action:pressed TextBlock">
+            <Setter Property="Foreground" Value="{DynamicResource AccentBrush}" />
         </Style>
     </Window.Styles>
 
-    <Grid RowDefinitions="Auto,*" Margin="20">
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="8" Margin="0 0 0 16">
-            <TextBox Width="180" Text="{Binding NewProcessName}" PlaceholderText="process name, e.g. code" />
-            <TextBox Width="180" Text="{Binding NewDisplayName}" PlaceholderText="display name (optional)" />
-            <Button Content="Add" Command="{Binding AddProcessCommand}"
-                    Background="{DynamicResource AccentBrush}" Foreground="White" />
-            <Button Content="Refresh" Command="{Binding RefreshCommand}"
-                    IsEnabled="{Binding !IsRefreshing}" />
-            <Button Content="Settings" Command="{Binding OpenSettingsCommand}" />
-        </StackPanel>
+    <Grid RowDefinitions="Auto,*" Margin="34 28 34 24">
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Margin="0 0 0 26">
+                <StackPanel Spacing="5">
+                    <StackPanel Orientation="Horizontal" Spacing="10">
+                        <Border Width="34" Height="34" CornerRadius="10" Background="{DynamicResource AccentBrush}">
+                            <Image Source="/Assets/Icons/icon.ico" Width="32" Height="32"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock Text="SPECTRE" FontSize="16" FontWeight="Bold"
+                                   VerticalAlignment="Center"
+                                   Foreground="{DynamicResource TextPrimaryBrush}" />
+                    </StackPanel>
+                    <TextBlock Text="Your activity" FontSize="30" FontWeight="Bold"
+                               Foreground="{DynamicResource TextPrimaryBrush}" />
+                    <TextBlock Text="A clear view of where your time goes." FontSize="13"
+                               Foreground="{DynamicResource TextMutedBrush}" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="9"
+                            VerticalAlignment="Center">
+                    <Button Classes="refresh-button" Content="↻" ToolTip.Tip="Refresh dashboard"
+                            Command="{Binding RefreshCommand}" IsEnabled="{Binding !IsRefreshing}" />
+                    <Button Classes="refresh-button" Command="{Binding ToggleMonitoringCommand}"
+                            ToolTip.Tip="{Binding MonitoringText}">
+                        <StackPanel Orientation="Horizontal" Spacing="7">
+                            <TextBlock Text="{Binding MonitoringIcon}" FontSize="14"
+                                       Foreground="{Binding MonitoringColor}" />
+                            <TextBlock Text="{Binding MonitoringText}" />
+                        </StackPanel>
+                    </Button>
+                    <Button Classes="refresh-button" Height="38" MinHeight="38"
+                            ToolTip.Tip="Preferences" Command="{Binding OpenSettingsCommand}">
+                        <TextBlock Text="⚙" FontSize="18" VerticalAlignment="Center" />
+                    </Button>
+                </StackPanel>
+            </Grid>
 
-        <ScrollViewer Grid.Row="1">
-            <ItemsControl ItemsSource="{Binding Apps}">
-                <ItemsControl.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel Orientation="Horizontal" />
-                    </ItemsPanelTemplate>
-                </ItemsControl.ItemsPanel>
-
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate x:DataType="vm:TrackedAppRow">
-                        <Button Classes="card"
-                                Command="{Binding #RootWindow.((vm:MainWindowViewModel)DataContext).OpenDetailCommand}"
-                                CommandParameter="{Binding}">
-                            <StackPanel Spacing="6">
-                                <TextBlock Text="{Binding DisplayName}"
-                                           Foreground="{DynamicResource TextPrimaryBrush}"
-                                           FontSize="16" FontWeight="SemiBold" />
-                                <TextBlock Text="{Binding ProcessName}"
-                                           Foreground="{DynamicResource TextMutedBrush}"
-                                           FontSize="12" />
-                                <TextBlock Text="{Binding TotalTimeFormatted}"
-                                           Foreground="{DynamicResource AccentBrush}"
-                                           FontSize="20" FontWeight="Bold"
-                                           FontFamily="Consolas,Menlo,monospace" />
+            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled"
+                          VerticalScrollBarVisibility="Auto"
+                          HorizontalContentAlignment="Stretch">
+                <StackPanel Spacing="18">
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="12"
+                          Margin="0 0 4 0">
+                        <Border Classes="panel" Padding="17">
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="TOTAL PLAYTIME" FontSize="10" FontWeight="Bold"
+                                           Foreground="{DynamicResource TextMutedBrush}" />
+                                <TextBlock Text="{Binding OverallTimeFormatted}" FontSize="24"
+                                           FontWeight="Bold" FontFamily="Consolas,Menlo,monospace"
+                                           Foreground="{DynamicResource AccentBrush}" />
+                                <TextBlock Text="Across all tracked apps" FontSize="11"
+                                           Foreground="{DynamicResource TextMutedBrush}" />
                             </StackPanel>
-                        </Button>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+                        </Border>
+                        <Border Grid.Column="1" Classes="panel" Padding="17">
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="TRACKED APPS" FontSize="10" FontWeight="Bold"
+                                           Foreground="{DynamicResource TextMutedBrush}" />
+                                <TextBlock Text="{Binding TrackedCount}" FontSize="24" FontWeight="Bold"
+                                           Foreground="{DynamicResource TextPrimaryBrush}" />
+                                <TextBlock Text="Processes in your workspace" FontSize="11"
+                                           Foreground="{DynamicResource TextMutedBrush}" />
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="2" Classes="panel" Padding="17"
+                                Background="#10233A" BorderBrush="#235080">
+                            <StackPanel Spacing="5">
+                                <TextBlock Text="QUICK ACTION" FontSize="10" FontWeight="Bold"
+                                           Foreground="{DynamicResource AccentBrush}" />
+                                <TextBlock Text="Add a new app" FontSize="15" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource TextPrimaryBrush}" />
+                                <TextBlock Text="Start tracking in seconds" FontSize="11"
+                                           Foreground="{DynamicResource TextMutedBrush}" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <Border Classes="panel" Padding="15">
+                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="12">
+                            <TextBlock Text="⌕" FontSize="23" Foreground="{DynamicResource AccentBrush}"
+                                       VerticalAlignment="Center" />
+                            <TextBox Grid.Column="1" Text="{Binding SearchText}"
+                                     PlaceholderText="Search tracked applications or process names..."
+                                     BorderThickness="0" Background="Transparent" Padding="8 5"
+                                     VerticalContentAlignment="Center" />
+                        </Grid>
+                    </Border>
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <TextBlock Text="Tracked applications" FontSize="18" FontWeight="Bold"
+                                   Foreground="{DynamicResource TextPrimaryBrush}" />
+                        <TextBlock Grid.Column="1" Text="Click a card to inspect sessions"
+                                   FontSize="11" Foreground="{DynamicResource TextMutedBrush}"
+                                   VerticalAlignment="Center" />
+                    </Grid>
+
+                    <Border Classes="panel" Padding="16">
+                        <Grid RowDefinitions="Auto,Auto,*" RowSpacing="14">
+                            <Grid ColumnDefinitions="*,*,Auto" ColumnSpacing="10">
+                                <TextBox Grid.Column="0" Text="{Binding NewProcessName}"
+                                         PlaceholderText="Process name  •  e.g. code" />
+                                <TextBox Grid.Column="1" Text="{Binding NewDisplayName}"
+                                         PlaceholderText="Friendly name  •  optional" />
+                                <Button Classes="accent-button" Grid.Column="2" Content="+  Add app"
+                                        Command="{Binding AddProcessCommand}"
+                                        Foreground="#06101D"
+                                        Padding="18 10" />
+                            </Grid>
+                            <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}"
+                                       Margin="2 10 0 0" FontSize="11" Foreground="#FF7180"
+                                       IsVisible="{Binding ErrorMessage, Converter={x:Static StringConverters.IsNotNullOrEmpty}}" />
+
+                            <ItemsControl Grid.Row="2" ItemsSource="{Binding VisibleApps}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:TrackedAppRow">
+                                        <Button Classes="app-card"
+                                                Command="{Binding #RootWindow.((vm:MainWindowViewModel)DataContext).OpenDetailCommand}"
+                                                CommandParameter="{Binding}">
+                                            <Grid RowDefinitions="Auto,*,Auto">
+                                                <Grid ColumnDefinitions="Auto,*,Auto">
+                                                    <Border Width="36" Height="36" CornerRadius="10"
+                                                            Background="#1B3555">
+                                                        <TextBlock Text="◉" FontSize="17"
+                                                                   Foreground="{DynamicResource AccentBrush}"
+                                                                   HorizontalAlignment="Center"
+                                                                   VerticalAlignment="Center" />
+                                                    </Border>
+                                                    <TextBlock Grid.Column="1" Text="{Binding DisplayName}"
+                                                               Margin="11 0 0 0" FontSize="15" FontWeight="SemiBold"
+                                                               Foreground="{DynamicResource TextPrimaryBrush}"
+                                                               VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+                                                    <Ellipse Grid.Column="2" Width="8" Height="8" Fill="{Binding StatusColor}"
+                                                             VerticalAlignment="Center" />
+                                                </Grid>
+                                                <StackPanel Grid.Row="1" Margin="0 15 0 12" Spacing="3">
+                                                    <TextBlock Text="{Binding TotalTimeFormatted}" FontSize="22"
+                                                               FontWeight="Bold" FontFamily="Consolas,Menlo,monospace"
+                                                               Foreground="{DynamicResource AccentBrush}" />
+                                                    <TextBlock Text="{Binding StatusText}" FontSize="10"
+                                                               Foreground="{DynamicResource TextMutedBrush}" />
+                                                </StackPanel>
+                                                <TextBlock Grid.Row="2" Text="{Binding ProcessName, StringFormat='process  /  {0}'}"
+                                                           FontSize="10" Foreground="{DynamicResource TextMutedBrush}"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </Grid>
+                                        </Button>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Grid>
+                    </Border>
+
+                    <Border IsVisible="{Binding HasNoSearchResults}" Classes="panel" Padding="28">
+                        <StackPanel HorizontalAlignment="Center" Spacing="6">
+                            <TextBlock Text="No matching apps" FontSize="16" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource TextPrimaryBrush}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="Try a different name or process." FontSize="12"
+                                       Foreground="{DynamicResource TextMutedBrush}"
+                                       HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                    <Border IsVisible="{Binding !HasApps}" Classes="panel" Padding="36">
+                        <StackPanel HorizontalAlignment="Center" Spacing="8">
+                            <TextBlock Text="◌" FontSize="34" Foreground="{DynamicResource AccentBrush}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="Your workspace is ready" FontSize="18" FontWeight="Bold"
+                                       Foreground="{DynamicResource TextPrimaryBrush}"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="Add an application above to start building your activity timeline."
+                                       FontSize="12" Foreground="{DynamicResource TextMutedBrush}"
+                                       HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </ScrollViewer>
     </Grid>
 </Window>

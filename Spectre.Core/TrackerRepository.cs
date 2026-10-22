@@ -36,6 +36,21 @@ public class TrackerRepository
                          FOREIGN KEY (AppId) REFERENCES TrackedApps(Id)
                      );
                      """);
+
+        // A forced quit can leave a session open forever. Finalize it before
+        // the tracker starts a new session for currently running processes.
+        var endTime = DateTime.UtcNow;
+        var openSessions = conn.Query<AppSession>(
+            "SELECT * FROM AppSessions WHERE EndTime IS NULL").AsList();
+        foreach (var session in openSessions)
+        {
+            var durationSeconds = Math.Max(0, (long)(endTime - session.StartTime).TotalSeconds);
+            conn.Execute("""
+                         UPDATE AppSessions
+                         SET EndTime = @endTime, DurationSeconds = @durationSeconds
+                         WHERE Id = @sessionId
+                         """, new { sessionId = session.Id, endTime, durationSeconds });
+        }
     }
 
     public async Task<int> AddTrackedAppAsync(TrackedApp app)
@@ -81,7 +96,23 @@ public class TrackerRepository
             "SELECT * FROM AppSessions WHERE AppId = @appId ORDER BY StartTime DESC",
             new { appId });
     }
-    
+
+    public async Task<IEnumerable<AppTotal>> GetAppTotalsAsync(DateTime nowUtc)
+    {
+        await using var conn = Connection();
+        return await conn.QueryAsync<AppTotal>("""
+            SELECT AppId,
+                   COALESCE(SUM(
+                       CASE WHEN EndTime IS NULL
+                           THEN MAX(0, CAST((julianday(@nowUtc) - julianday(StartTime)) * 86400 AS INTEGER))
+                           ELSE DurationSeconds
+                       END
+                   ), 0) AS TotalSeconds
+            FROM AppSessions
+            GROUP BY AppId
+            """, new { nowUtc });
+    }
+
     public async Task<bool> UpdateAppAsync(int appId, string processName, string displayName)
     {
         await using var conn = Connection();

@@ -2,6 +2,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Spectre.Core;
@@ -11,6 +12,9 @@ namespace Spectre.UI;
 public partial class AppDetailViewModel(TrackerRepository repo, ProcessTrackerService tracker) : ObservableObject
 {
     private int _appId;
+    private string _processName = string.Empty;
+    private readonly DispatcherTimer _liveTimer = new() { Interval = TimeSpan.FromSeconds(2) };
+    private bool _refreshing;
 
     [ObservableProperty]
     private string _displayName = string.Empty;
@@ -25,6 +29,11 @@ public partial class AppDetailViewModel(TrackerRepository repo, ProcessTrackerSe
     private string? _errorMessage;
 
     public ObservableCollection<SessionRow> Sessions { get; } = new();
+    public string TotalTimeFormatted { get; private set; } = "0h 00m 00s";
+    public string SessionCountText => $"{Sessions.Count} session{(Sessions.Count == 1 ? string.Empty : "s")}";
+    public bool IsRunning { get; private set; }
+    public string StatusText => IsRunning ? "RUNNING NOW" : "NOT RUNNING";
+    public string StatusColor => IsRunning ? "#4ADE80" : "#53627A";
 
     public event Action? RequestClose;
 
@@ -34,15 +43,55 @@ public partial class AppDetailViewModel(TrackerRepository repo, ProcessTrackerSe
         DisplayName = app.DisplayName;
         EditableDisplayName = app.DisplayName;
         EditableProcessName = app.ProcessName;
+        _processName = app.ProcessName;
 
-        Sessions.Clear();
-        var sessions = await repo.GetSessionsForAppAsync(app.Id);
-        foreach (var s in sessions)
+        await RefreshLiveStateAsync();
+        _liveTimer.Tick -= OnLiveTimerTick;
+        _liveTimer.Tick += OnLiveTimerTick;
+        _liveTimer.Start();
+    }
+
+    private async void OnLiveTimerTick(object? sender, EventArgs e) => await RefreshLiveStateAsync();
+
+    private async Task RefreshLiveStateAsync()
+    {
+        if (_refreshing) return;
+        _refreshing = true;
+        try
         {
-            Sessions.Add(new SessionRow(
-                s.StartTime.ToLocalTime().ToString("MMM d, HH:mm"),
-                DurationFormatter.Format(s)));
+            var sessions = (await repo.GetSessionsForAppAsync(_appId)).ToList();
+            var wasRunning = IsRunning;
+            IsRunning = tracker.IsProcessRunning(_processName);
+
+            Sessions.Clear();
+            foreach (var session in sessions)
+            {
+                Sessions.Add(new SessionRow(
+                    session.StartTime.ToLocalTime().ToString("MMM d, HH:mm"),
+                    DurationFormatter.Format(session)));
+            }
+
+            TotalTimeFormatted = DurationFormatter.Format(
+                sessions.Sum(s => DurationFormatter.GetTotalSeconds(s, DateTime.UtcNow)));
+            OnPropertyChanged(nameof(TotalTimeFormatted));
+            OnPropertyChanged(nameof(SessionCountText));
+            if (wasRunning != IsRunning)
+            {
+                OnPropertyChanged(nameof(IsRunning));
+                OnPropertyChanged(nameof(StatusText));
+                OnPropertyChanged(nameof(StatusColor));
+            }
         }
+        finally
+        {
+            _refreshing = false;
+        }
+    }
+
+    public void StopLiveUpdates()
+    {
+        _liveTimer.Stop();
+        _liveTimer.Tick -= OnLiveTimerTick;
     }
 
     [RelayCommand]
@@ -67,6 +116,7 @@ public partial class AppDetailViewModel(TrackerRepository repo, ProcessTrackerSe
         }
 
         DisplayName = newDisplayName;
+        _processName = newProcessName;
         await tracker.RefreshTrackedAppsAsync();
     }
 
@@ -100,9 +150,10 @@ internal static class DurationFormatter
 
     public static string Format(long totalSeconds)
     {
-        var duration = TimeSpan.FromSeconds(totalSeconds);
-        return duration.TotalDays >= 1
-            ? $"{(long)duration.TotalDays}d {duration:hh\\:mm\\:ss}"
-            : duration.ToString(@"hh\:mm\:ss");
+        totalSeconds = Math.Max(0, totalSeconds);
+        var totalHours = totalSeconds / 3600;
+        var minutes = totalSeconds % 3600 / 60;
+        var seconds = totalSeconds % 60;
+        return $"{totalHours}h {minutes:00}m {seconds:00}s";
     }
 }

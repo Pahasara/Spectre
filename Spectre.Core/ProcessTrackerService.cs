@@ -17,7 +17,14 @@ public class ProcessTrackerService(TrackerRepository repo, ConfigService config,
         {
             try
             {
-                await PollOnceAsync();
+                if (config.Current.MonitoringEnabled)
+                {
+                    await PollOnceAsync();
+                }
+                else
+                {
+                    await CloseAllActiveSessionsAsync();
+                }
             }
             catch (Exception ex)
             {
@@ -36,6 +43,9 @@ public class ProcessTrackerService(TrackerRepository repo, ConfigService config,
         var apps = await repo.GetTrackedAppsAsync();
         _trackedAppIds = apps.ToDictionary(a => a.ProcessName, a => a.Id, StringComparer.OrdinalIgnoreCase);
     }
+
+    public bool IsProcessRunning(string processName) =>
+        _activeSessions.ContainsKey(processName);
 
     private async Task PollOnceAsync()
     {

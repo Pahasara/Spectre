@@ -13,6 +13,8 @@ namespace Spectre.UI;
 public partial class App : Application
 {
     public static IHost? Host { get; set; }
+    internal static SingleInstanceCoordinator? SingleInstance { get; set; }
+    private Window? _mainWindow;
 
     public override void Initialize() => AvaloniaXamlLoader.Load(this);
 
@@ -26,6 +28,7 @@ public partial class App : Application
             {
                 DataContext = Host!.Services.GetRequiredService<MainWindowViewModel>()
             };
+            _mainWindow = window;
 
             window.Closing += (_, e) =>
             {
@@ -35,14 +38,22 @@ public partial class App : Application
 
             desktop.MainWindow = window;
             SetupTrayIcon(desktop, window);
+            ShowMainWindow();
+            desktop.ShutdownRequested += (_, _) => SingleInstance?.Dispose();
         }
 
         base.OnFrameworkInitializationCompleted();
     }
 
+    public void ShowMainWindow()
+    {
+        if (_mainWindow is null) return;
+        ShowWindow(_mainWindow);
+    }
+
     private void SetupTrayIcon(IClassicDesktopStyleApplicationLifetime desktop, Window window)
     {
-        var iconUri = new Uri("avares://Spectre.UI/Assets/Icons/tray-icon.ico");
+        var iconUri = new Uri("avares://Spectre/Assets/Icons/tray-icon.ico");
 
         var tray = new TrayIcon
         {
@@ -72,6 +83,8 @@ public partial class App : Application
 
     private static void ShowWindow(Window window)
     {
+        if (window.WindowState == WindowState.Minimized)
+            window.WindowState = WindowState.Normal;
         window.Show();
         window.Activate();
 

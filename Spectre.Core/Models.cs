@@ -16,3 +16,9 @@ public record AppSession
     public DateTime? EndTime { get; init; }
     public long DurationSeconds { get; init; }
 }
+
+public record AppTotal
+{
+    public int AppId { get; init; }
+    public long TotalSeconds { get; init; }
+}

@@ -6,11 +6,11 @@
     <ApplicationIcon>Assets\Icons\icon.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <InterceptorsNamespaces>$(InterceptorsNamespaces);Dapper.AOT</InterceptorsNamespaces>
-    
+
     <Product>Spectre</Product>
-    <ProductVersion>1.0.0.0</ProductVersion>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <ProductVersion>1.1.0.0</ProductVersion>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
+    <FileVersion>1.1.0.0</FileVersion>
     <Company>Dewnith Fernando</Company>
     <Copyright>©2026 Dewnith Fernando. All rights reserved.</Copyright>
   </PropertyGroup>

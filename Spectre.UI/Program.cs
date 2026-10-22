@@ -4,6 +4,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Spectre.Core;
 using Spectre.UI;
 
+using var singleInstance = SingleInstanceCoordinator.TryCreate(
+    AppPaths.SingleInstanceLockPath);
+
+if (singleInstance is null)
+{
+    return;
+}
+
 var builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddSingleton<MainWindowViewModel>();
@@ -16,7 +24,11 @@ var host = builder.Build();
 host.Start();
 
 BuildAvaloniaApp()
-    .AfterSetup(_ => App.Host = host)
+    .AfterSetup(_ =>
+    {
+        App.Host = host;
+        App.SingleInstance = singleInstance;
+    })
     .StartWithClassicDesktopLifetime(args);
 
 host.StopAsync().GetAwaiter().GetResult();
