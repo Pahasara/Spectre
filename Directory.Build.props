@@ -11,5 +11,17 @@
       $(MSBuildProjectDirectory)/bin/**;
       $(MSBuildProjectDirectory)/obj/**
     </DefaultItemExcludes>
+
+    <!-- Shared build settings. -->
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <InterceptorsNamespaces>$(InterceptorsNamespaces);Dapper.AOT</InterceptorsNamespaces>
+
+    <!-- Shared version and branding info. Bump the version here once. -->
+    <Version>1.1.1</Version>
+    <AssemblyVersion>1.1.1.0</AssemblyVersion>
+    <FileVersion>1.1.1.0</FileVersion>
+    <Company>Dewnith Fernando</Company>
+    <Copyright>©2026 Dewnith Fernando. All rights reserved.</Copyright>
   </PropertyGroup>
 </Project>
