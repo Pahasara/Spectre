@@ -4,6 +4,8 @@
 [Ll]og/
 [Ll]ogs/
 artifacts/
+publish/
+output/
 
 # JetBrains Rider
 .idea/

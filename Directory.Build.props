@@ -1,27 +1,27 @@
 <Project>
+  <!-- Shared settings for every project in the solution. -->
   <PropertyGroup>
-    <!-- Keep generated files outside the project source directories. -->
-    <BaseOutputPath>$(MSBuildThisFileDirectory)Output/$(MSBuildProjectName)/bin/</BaseOutputPath>
-    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)Output/$(MSBuildProjectName)/obj/</BaseIntermediateOutputPath>
+    <Company>Pahasara DvNET</Company>
+    <Copyright>Copyright © 2026 Pahasara DvNET</Copyright>
+    <VersionPrefix>1.1.2</VersionPrefix>
+    <Version Condition="'$(Version)' == ''">$(VersionPrefix)</Version>
+    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(VersionPrefix).0</AssemblyVersion>
+    <FileVersion Condition="'$(FileVersion)' == ''">$(VersionPrefix).0</FileVersion>
+    <InformationalVersion Condition="'$(InformationalVersion)' == ''">$(Version)</InformationalVersion>
 
-    <!-- Prevent generated source files from entering the SDK default item globs. -->
-    <DefaultItemExcludes>
-      $(DefaultItemExcludes);
-      $(MSBuildThisFileDirectory)Output/**;
-      $(MSBuildProjectDirectory)/bin/**;
-      $(MSBuildProjectDirectory)/obj/**
-    </DefaultItemExcludes>
-
-    <!-- Shared build settings. -->
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <InterceptorsNamespaces>$(InterceptorsNamespaces);Dapper.AOT</InterceptorsNamespaces>
 
-    <!-- Shared version and branding info. Bump the version here once. -->
-    <Version>1.1.1</Version>
-    <AssemblyVersion>1.1.1.0</AssemblyVersion>
-    <FileVersion>1.1.1.0</FileVersion>
-    <Company>Dewnith Fernando</Company>
-    <Copyright>©2026 Dewnith Fernando. All rights reserved.</Copyright>
+    <BaseOutputPath>$(MSBuildThisFileDirectory)output/$(MSBuildProjectName)/bin/</BaseOutputPath>
+    <BaseIntermediateOutputPath>$(MSBuildThisFileDirectory)output/$(MSBuildProjectName)/obj/</BaseIntermediateOutputPath>
+    <DefaultItemExcludes>$(DefaultItemExcludes);$(MSBuildThisFileDirectory)output/**;$(MSBuildProjectDirectory)/bin/**;$(MSBuildProjectDirectory)/obj/**</DefaultItemExcludes>
+  </PropertyGroup>
+
+  <!-- Release-only settings. Native AOT itself is switched on in Spectre.UI.csproj. -->
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <DebugType>None</DebugType>
+    <SatelliteResourceLanguages>en</SatelliteResourceLanguages>
+    <AllowedReferenceRelatedFileExtensions></AllowedReferenceRelatedFileExtensions>
   </PropertyGroup>
 </Project>

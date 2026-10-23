@@ -4,15 +4,14 @@ using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Platform;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.Input;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 
 namespace Spectre.UI;
 
 public partial class App : Application
 {
-    public static IHost? Host { get; set; }
+    internal static Func<MainWindowViewModel>? ViewModelFactory { get; set; }
     internal static SingleInstanceCoordinator? SingleInstance { get; set; }
     private Window? _mainWindow;
 
@@ -26,7 +25,7 @@ public partial class App : Application
 
             var window = new MainWindow
             {
-                DataContext = Host!.Services.GetRequiredService<MainWindowViewModel>()
+                DataContext = ViewModelFactory!()
             };
             _mainWindow = window;
 
@@ -37,8 +36,16 @@ public partial class App : Application
             };
 
             desktop.MainWindow = window;
-            SetupTrayIcon(desktop, window);
+
+            // Show the window first so the user sees the UI right away.
             ShowMainWindow();
+
+            // When a second launch signals us, bring this window back (listener runs off the UI thread).
+            SingleInstance?.StartListening(() => Dispatcher.UIThread.Post(ShowMainWindow));
+
+            // Tray icon setup (decodes an .ico) is not needed for the first frame, so defer it.
+            Dispatcher.UIThread.Post(() => SetupTrayIcon(desktop, window), DispatcherPriority.Background);
+
             desktop.ShutdownRequested += (_, _) => SingleInstance?.Dispose();
         }
 

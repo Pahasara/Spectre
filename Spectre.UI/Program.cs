@@ -1,37 +1,34 @@
-﻿using Avalonia;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.DependencyInjection;
+﻿using System;
+using System.Threading.Tasks;
+using Avalonia;
 using Spectre.Core;
 using Spectre.UI;
 
+// Exit immediately if another instance already holds the lock file.
 using var singleInstance = SingleInstanceCoordinator.TryCreate(
     AppPaths.SingleInstanceLockPath);
 
 if (singleInstance is null)
 {
+    // Already running (maybe hidden in the tray): ask that instance to show its window, then exit.
+    SingleInstanceCoordinator.SignalExistingInstance();
     return;
 }
 
-var builder = Host.CreateApplicationBuilder(args);
+var config = new ConfigService();
+var repo = new TrackerRepository();
+var tracker = new ProcessTrackerService(repo, config);
+tracker.Start();
 
-builder.Services.AddSingleton<MainWindowViewModel>();
-builder.Services.AddSingleton<ConfigService>();
-builder.Services.AddSingleton<TrackerRepository>();
-builder.Services.AddSingleton<ProcessTrackerService>();
-builder.Services.AddHostedService(sp => sp.GetRequiredService<ProcessTrackerService>());
+// Plain static hand-off to App: no AfterSetup lambda, so nothing captures the
+// disposable singleInstance (that was the "captured variable is disposed" warning).
+App.SingleInstance = singleInstance;
+App.ViewModelFactory = () => new MainWindowViewModel(repo, tracker, config);
 
-var host = builder.Build();
-host.Start();
+BuildAvaloniaApp().StartWithClassicDesktopLifetime(args);
 
-BuildAvaloniaApp()
-    .AfterSetup(_ =>
-    {
-        App.Host = host;
-        App.SingleInstance = singleInstance;
-    })
-    .StartWithClassicDesktopLifetime(args);
-
-host.StopAsync().GetAwaiter().GetResult();
+// Run on the thread pool (the UI sync context is dead after shutdown) and cap the wait.
+Task.Run(tracker.StopAsync).Wait(TimeSpan.FromSeconds(5));
 return;
 
 static AppBuilder BuildAvaloniaApp() =>

@@ -8,10 +8,12 @@ public class TrackerRepository
 {
     private readonly string _connString;
 
+    private readonly Task _ready;
+
     public TrackerRepository()
     {
         _connString = $"Data Source={AppPaths.DbPath}";
-        InitializeSchema();
+        _ready = Task.Run(InitializeSchema);
     }
 
     private SqliteConnection Connection() => new(_connString);
@@ -19,6 +21,10 @@ public class TrackerRepository
     private void InitializeSchema()
     {
         using var conn = Connection();
+
+        // WAL is stored in the database file: faster writes, readers never block the writer.
+        conn.Execute("PRAGMA journal_mode=WAL;");
+
         conn.Execute("""
                      CREATE TABLE IF NOT EXISTS TrackedApps (
                          Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -35,6 +41,8 @@ public class TrackerRepository
                          DurationSeconds INTEGER NOT NULL DEFAULT 0,
                          FOREIGN KEY (AppId) REFERENCES TrackedApps(Id)
                      );
+
+                     CREATE INDEX IF NOT EXISTS IX_AppSessions_AppId ON AppSessions(AppId);
                      """);
 
         // A forced quit can leave a session open forever. Finalize it before
@@ -55,6 +63,7 @@ public class TrackerRepository
 
     public async Task<int> AddTrackedAppAsync(TrackedApp app)
     {
+        await _ready;
         await using var conn = Connection();
         return await conn.ExecuteScalarAsync<int>("""
                                                   INSERT INTO TrackedApps (ProcessName, DisplayName, IconPath)
@@ -65,12 +74,14 @@ public class TrackerRepository
 
     public async Task<IEnumerable<TrackedApp>> GetTrackedAppsAsync()
     {
+        await _ready;
         await using var conn = Connection();
         return await conn.QueryAsync<TrackedApp>("SELECT * FROM TrackedApps");
     }
 
     public async Task<int> StartSessionAsync(int appId, DateTime startTime)
     {
+        await _ready;
         await using var conn = Connection();
         return await conn.ExecuteScalarAsync<int>("""
                                                   INSERT INTO AppSessions (AppId, StartTime, DurationSeconds)
@@ -81,6 +92,7 @@ public class TrackerRepository
 
     public async Task EndSessionAsync(int sessionId, DateTime endTime, long durationSeconds)
     {
+        await _ready;
         await using var conn = Connection();
         await conn.ExecuteAsync("""
                                 UPDATE AppSessions
@@ -91,6 +103,7 @@ public class TrackerRepository
 
     public async Task<IEnumerable<AppSession>> GetSessionsForAppAsync(int appId)
     {
+        await _ready;
         await using var conn = Connection();
         return await conn.QueryAsync<AppSession>(
             "SELECT * FROM AppSessions WHERE AppId = @appId ORDER BY StartTime DESC",
@@ -99,6 +112,7 @@ public class TrackerRepository
 
     public async Task<IEnumerable<AppTotal>> GetAppTotalsAsync(DateTime nowUtc)
     {
+        await _ready;
         await using var conn = Connection();
         return await conn.QueryAsync<AppTotal>("""
             SELECT AppId,
@@ -115,6 +129,7 @@ public class TrackerRepository
 
     public async Task<bool> UpdateAppAsync(int appId, string processName, string displayName)
     {
+        await _ready;
         await using var conn = Connection();
         try
         {
@@ -131,6 +146,7 @@ public class TrackerRepository
 
     public async Task DeleteTrackedAppAsync(int appId)
     {
+        await _ready;
         await using var conn = Connection();
         await conn.ExecuteAsync("DELETE FROM AppSessions WHERE AppId = @appId", new { appId });
         await conn.ExecuteAsync("DELETE FROM TrackedApps WHERE Id = @appId", new { appId });
